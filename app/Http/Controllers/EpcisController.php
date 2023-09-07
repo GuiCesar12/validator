@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Body;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Epcis;
@@ -26,7 +27,10 @@ class EpcisController extends Controller
         $masterData = $xmlString->EPCISHeader->extension->EPCISMasterData;
         $vocabulary = new Vocabulary;
         $vocabulary->validate_vocabularys($masterData);
-        dd($vocabulary->validate_vocabularys($masterData));
+        $body =  new Body;
+        $body->validate_body($xmlString->EPCISBody);
+        // dd($vocabulary->validate_vocabularys($masterData));
+        
    
 
 
