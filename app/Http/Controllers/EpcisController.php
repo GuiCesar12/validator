@@ -30,9 +30,9 @@ class EpcisController extends Controller
         $masterData = $xmlString->EPCISHeader->extension->EPCISMasterData;
         $vocabulary = new Vocabulary;
 
-        $result [] = ["Vocabulary"=>$vocabulary->validate_vocabularys($masterData)];
+        $result [] = ["Header"=>["Vocabulary"=>$vocabulary->validate_vocabularys($masterData)]];
         $event_list = new EventList;
-        $result[]= ["EventList"=>$event_list->validate($xmlString->EPCISBody->EventList)];
+        $result[]= ["Body"=>["EventList"=>$event_list->validate($xmlString->EPCISBody->EventList)]];
         dd($result);
         // dd($vocabulary->validate_vocabularys($masterData));
         

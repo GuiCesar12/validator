@@ -36,7 +36,7 @@ $('[name="formEpcis"]').on('submit', function(e){
         // formData.append('file', $('[name="formEpcis"]').find('input[type=file]')[0].files[0]);
         //verifyForm();
         Swal.fire({
-            title: 'Do you want to save the note?',
+            title: 'Do you want to save the EPCIS?',
             // showDenyButton: true,
             showCancelButton: true,
             confirmButtonText: 'Ok',

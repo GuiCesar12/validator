@@ -12,11 +12,42 @@ class EventList extends Body
 
     public function validate($params)
     {
-        $types = $this->get_type_object_events($params);
         $result = [];
+        $aggregation = $this->get_aggregation_to_array($params);
+        $types = $this->get_type_object_events($params);
         $result [] = $this->validate_object_events($types);
+        $result[]=$this->validate_aggregation_events($aggregation);
         return $result;
     }
+
+
+    private function get_aggregation_to_array($params){
+        $agreggation_event = $params->AggregationEvent;
+        $datas = [];
+        foreach($agreggation_event as $data){
+            $json = json_encode($data);
+            $array = json_decode($json,true);
+            $datas[] = ((array)$array);
+        }
+        return $datas;
+    }
+
+
+    private function validate_aggregation_events($params){
+
+        $datas = [];
+        foreach($params as $data){
+            $datas[] = AggregationEvent::instance_aggregation_events($data)->validate_fields();
+        }
+        return ["AggregationEvent"=>$datas];
+        
+    }
+
+
+
+
+
+
 
     private function get_object_events_to_array($params){
         $datas = [];
