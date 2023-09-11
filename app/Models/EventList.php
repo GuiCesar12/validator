@@ -10,11 +10,12 @@ class EventList extends Body
 {
     use HasFactory;
 
-    public function __construct($params)
+    public function validate($params)
     {
         $types = $this->get_type_object_events($params);
-        dd($this->validate_object_events($types));
-          
+        $result = [];
+        $result [] = $this->validate_object_events($types);
+        return $result;
     }
 
     private function get_object_events_to_array($params){
@@ -44,11 +45,17 @@ class EventList extends Body
     }
     private function validate_object_events($types){
         $datas = [];
+        $result = [];
+        $obj_aggregation = [];
         // dd($types["ObjectsEvents"]);
         foreach($types["ObjectsEvents"] as $first){
             $datas[]  = ObjectEvent::instance_objects_events($first)->validate_fields();
         }
-        dd($datas);
+        foreach($types["ObjectsEventsAggregation"] as $secondary){
+            // dd($secondary);
+            $obj_aggregation[] = ObjectEvent::instance_objects_events($secondary)->validate_fields_secondary();
+        }
+        return ["ObjectsEvents"=>$datas,"ObjectsEventsAggregation"=>$obj_aggregation];
     }
 
 

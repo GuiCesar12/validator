@@ -6,6 +6,7 @@ use App\Models\Body;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Epcis;
+use App\Models\EventList;
 use App\Models\Header;
 use App\Models\Locations;
 use App\Models\Products;
@@ -24,11 +25,15 @@ class EpcisController extends Controller
         else{
             echo "Versão fora do padrão 1.2 de 2016";
         }
+        $result = [];
+        
         $masterData = $xmlString->EPCISHeader->extension->EPCISMasterData;
         $vocabulary = new Vocabulary;
-        $vocabulary->validate_vocabularys($masterData);
-        $body =  new Body;
-        $body->validate_body($xmlString->EPCISBody);
+
+        $result [] = ["Vocabulary"=>$vocabulary->validate_vocabularys($masterData)];
+        $event_list = new EventList;
+        $result[]= ["EventList"=>$event_list->validate($xmlString->EPCISBody->EventList)];
+        dd($result);
         // dd($vocabulary->validate_vocabularys($masterData));
         
    
