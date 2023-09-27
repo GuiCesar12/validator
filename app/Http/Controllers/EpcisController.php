@@ -16,6 +16,11 @@ use App\Models\Vocabulary;
 class EpcisController extends Controller
 {
     public function verify(Request $request){
+    
+        if($request->file() == []){
+            return response("Falha ao carregar o arquivo",400);
+        }
+        // dd($request->file());
         $xmlString = file_get_contents($request->file()['epcis']->getPathName());
         $xmlString = simplexml_load_string($xmlString);
         $version = $xmlString->attributes()->schemaVersion;
@@ -23,17 +28,29 @@ class EpcisController extends Controller
         if(Epcis::verifySchemaVersion($version) == true){
         }        
         else{
-            echo "Versão fora do padrão 1.2 de 2016";
+            echo "Versão fora do padrão 1.2 de 2016 <br>";
         }
         $result = [];
         
         $masterData = $xmlString->EPCISHeader->extension->EPCISMasterData;
         $vocabulary = new Vocabulary;
+        if(isset($masterData->VocabularyList)){
 
-        $result [] = ["Header"=>["Vocabulary"=>$vocabulary->validate_vocabularys($masterData)]];
-        $event_list = new EventList;
+            $result [] = ["Header"=>["Vocabulary"=>$vocabulary->validate_vocabularys($masterData)]];
+            $event_list = new EventList;
+        }else{
+            return response("Vocabulario nao existe",400);
+        }
+        $timestamp = Header::get_timestamp($xmlString);
+        if(!$event_list->validate_timestamp($xmlString->EPCISBody->EventList,$timestamp)== true){
+            return response('Erro em algum event_time',200);
+        }
+        
         $result[]= ["Body"=>["EventList"=>$event_list->validate($xmlString->EPCISBody->EventList)]];
-        dd($result);
+
+
+
+        return $result;
         // dd($vocabulary->validate_vocabularys($masterData));
         
    

@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use LDAP\Result;
+use Illuminate\Support\Facades\Validator;
 
 class AggregationEvent extends EventList
 {
     use HasFactory;
 
-    public string|bool $event_time ;
+    public string $event_time ;
     public string|bool $event_time_zone_offset ;
     public string|bool $parent_id ;
     public array $childEPCs;
@@ -24,7 +25,7 @@ class AggregationEvent extends EventList
 
 
 
-    public function __construct(string|bool $event_time ,
+    public function __construct(string $event_time ,
                                 string|bool $event_time_zone_offset ,
                                 string|bool $parent_id ,
                                 array $childEPCs,
@@ -84,6 +85,13 @@ class AggregationEvent extends EventList
     public function validate_childEPCs(){
         $valid = is_array($this->childEPCs["epc"]) ? $this->childEPCs["epc"] : [$this->childEPCs["epc"]];
             foreach($valid as $list){
+                $validate_sgtin = Validator::make(['sgtin' =>$list], [
+                    'sgtin' => ['required', 'regex:/^urn:epc:id:sgtin:[0-9]{4,12}\.[0-9]{1,10}\.[0-9A-Za-z]{1,30}$/'],
+                ]);
+        
+                if($validate_sgtin->fails() == true){
+                    return "Sgtin invalido";
+                }        
                 
                 if(is_bool($list)){
                     return "Campo childEPCs não existente";

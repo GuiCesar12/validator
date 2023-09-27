@@ -15,7 +15,26 @@
 
     <button type="submit" class="btn btn-primary" name="save">Save</button>
 </form>
-
+<table>
+    <tbody>
+        <tr>
+            <td>Alice</td>
+            <td>25</td>
+            <td>São Paulo</td>
+        </tr>
+        <tr>
+            <td>Bob</td>
+            <td>30</td>
+            <td>Rio de Janeiro</td>
+        </tr>
+        <tr>
+            <td>Charlie</td>
+            <td>22</td>
+            <td>Salvador</td>
+        </tr>
+        <!-- Adicione mais linhas conforme necessário -->
+    </tbody>
+</table>
 
 
 

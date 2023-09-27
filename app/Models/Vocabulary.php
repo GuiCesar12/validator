@@ -66,7 +66,7 @@ class Vocabulary extends Header
             $datas [$new_key] = Locations::instance_location($children)->validate_fields_locations() ;
             $count += 1;
         }
-        return $datas;
+        return ["Locations"=>$datas];
 
 
     }
@@ -94,7 +94,8 @@ class Vocabulary extends Header
             $datas [$new_key] = Products::instance_product($children)->validate_fields() ;
             $count += 1;
         }
-        return $datas;
+        
+        return ["Products"=>$datas];
     }
 
 
